@@ -133,6 +133,10 @@ func (dp *DepProcessor) restoreBackupFiles() error {
 }
 
 func getTempGoCache() (string, error) {
+	cache := config.GetConf().GoCache
+	if cache != "" {
+		return cache, nil
+	}
 	goCachePath, err := filepath.Abs(filepath.Join(util.TempBuildDir, GoCacheDir))
 	if err != nil {
 		return "", ex.Wrap(err)
@@ -164,9 +168,14 @@ func runBuildWithToolexec(goBuildCmd []string) error {
 
 	// Leave the temporary compilation directory
 	args = append(args, util.BuildWork)
-
-	// Force rebuilding
-	args = append(args, "-a")
+	var goCachePath string
+	cache := config.GetConf().GoCache
+	if cache != "" {
+		goCachePath = cache
+	} else {
+		// Force rebuilding
+		args = append(args, "-a")
+	}
 
 	if config.GetConf().Debug {
 		// Disable compiler optimizations for debugging mode
@@ -180,9 +189,11 @@ func runBuildWithToolexec(goBuildCmd []string) error {
 	util.AssertGoBuild(args)
 
 	// get the temporary build cache path
-	goCachePath, err := getTempGoCache()
-	if err != nil {
-		return err
+	if goCachePath == "" {
+		goCachePath, err = getTempGoCache()
+		if err != nil {
+			return err
+		}
 	}
 	util.Log("Using isolated GOCACHE: %s", goCachePath)
 
