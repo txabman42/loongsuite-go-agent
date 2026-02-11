@@ -47,11 +47,17 @@
   $ otel set -rule=a.json,b.json
 ```
 
+GoCache缓存路径：每次构建都会使用临时目录作为go缓存，您可以设置特定目录来重用缓存，这将减少编译时间超过50%。
+```bash
+  $ otel set -gocache=/tmp/go-cache
+```
+
 使用环境变量：除了使用`otel set`命令外，还可以使用环境变量覆盖配置。例如，`OTELTOOL_DEBUG`环境变量允许您暂时强制工具进入调试模式，使此方法对于一次性配置有效，而无需更改永久设置。
 
 ```bash
 $ export OTELTOOL_DEBUG=true
 $ export OTELTOOL_VERBOSE=true
+$ export OTELTOOL_GO_CACHE="/tmp/go-otel-cache"
 ```
 
 环境变量的名称对应于`otel set`命令中可用的配置选项，前缀为`OTELTOOL_`。
@@ -62,6 +68,7 @@ $ export OTELTOOL_VERBOSE=true
 - `OTELTOOL_VERBOSE`：启用详细日志记录。
 - `OTELTOOL_RULE_JSON_FILES`：指定自定义规则文件。
 - `OTELTOOL_DISABLE_RULES`：禁用特定规则。使用'all'禁用所有默认规则，或使用逗号分隔的规则文件名列表禁用特定规则。
+- `OTELTOOL_GO_CACHE`：设置特定目录来重用go缓存。
 
 这种方法为测试更改和试验配置提供了灵活性，而无需永久更改您现有的设置。
 

@@ -47,7 +47,8 @@ Multiple Rule Files: Combine multiple custom rule files along with the default r
   $ otel set -rule=a.json,b.json
 ```
 
-GoCache Path: Reduce compilation time by more than 50%
+GoCache Path: Each build will use a temporary directory as go cache, you can set the path to a specific directory to reuse the cache, this
+will reduce compilation time by more than 50%.
 ```bash
   $ otel set -gocache=/tmp/go-cache
 ```
@@ -57,6 +58,7 @@ Using Environment Variables: In addition to using the `otel set` command, config
 ```bash
 $ export OTELTOOL_DEBUG=true
 $ export OTELTOOL_VERBOSE=true
+$ export OTELTOOL_GO_CACHE="/tmp/go-otel-cache"
 ```
 
 The names of the environment variables correspond to the configuration options available in the `otel set` command with the `OTELTOOL_` prefix.
@@ -67,6 +69,7 @@ Full List of Environment Variables:
 - `OTELTOOL_VERBOSE`: Enable verbose logging.
 - `OTELTOOL_RULE_JSON_FILES`: Specify custom rule files.
 - `OTELTOOL_DISABLE_RULES`: Disable specific rules. Use 'all' to disable all default rules, or comma-separated list of rule file names to disable specific rules.
+- `OTELTOOL_GO_CACHE`: Set the path to a specific directory to reuse the go cache.
 
 This approach provides flexibility for testing changes and experimenting with configurations without permanently altering your existing setup.
 
