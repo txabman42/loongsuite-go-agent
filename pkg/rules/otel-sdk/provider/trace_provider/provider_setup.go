@@ -1,4 +1,4 @@
-// Copyright (c) 2025 Alibaba Group Holding Ltd.
+// Copyright (c) 2026 Alibaba Group Holding Ltd.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,4 +12,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package runtime
+// Copyright The OpenTelemetry Authors
+// SPDX-License-Identifier: Apache-2.0
+
+package span
+
+import (
+	"github.com/alibaba/loongsuite-go-agent/pkg/api"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/trace"
+	_ "unsafe"
+)
+
+//go:linkname setTracerProviderOnEnter go.opentelemetry.io/otel.setTracerProviderOnEnter
+func setTracerProviderOnEnter(call api.CallContext, tp trace.TracerProvider) {
+	if otel.SetGlobalProviderEnable {
+		call.SetSkipCall(true)
+		return
+	}
+	otel.SetGlobalProviderEnable = true
+}
